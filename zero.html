@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembuat QR Code Website</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+        h2 { color: #333; margin-bottom: 20px; }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box; /* Agar padding tidak merusak lebar */
+            font-size: 16px;
+        }
+        input[type="text"]:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        button:hover { background-color: #2980b9; }
+        #qrcode {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+            /* Memastikan QR Code tidak 'penyok' */
+        }
+        #qrcode img {
+            border: 5px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Buat QR Code Link</h2>
+    <input type="text" id="linkInput" placeholder="Contoh: https://google.com">
+    <button onclick="generateQR()">Buat QR Code</button>
+    
+    <div id="qrcode"></div>
+</div>
+
+<script>
+    // Menyiapkan object QRCode (pilih element target dan ukuran)
+    var qrcode = new QRCode(document.getElementById("qrcode"), {
+        width: 250,
+        height: 250,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H // High correction level
+    });
+
+    function generateQR() {
+        var linkText = document.getElementById("linkInput").value;
+        
+        // Cek jika input kosong
+        if (linkText.trim() === "") {
+            alert("Silakan masukkan link websitenya dulu!");
+            return;
+        }
+
+        // Jika user lupa pakai http:// atau https://, tambahkan otomatis biar Google tau itu link
+        if (!linkText.startsWith("http://") && !linkText.startsWith("https://")) {
+            linkText = "https://" + linkText;
+            document.getElementById("linkInput").value = linkText; // Update input biar user tau
+        }
+
+        // Bersihkan QR Code sebelumnya (jika ada) dan buat yang baru
+        qrcode.clear(); 
+        qrcode.makeCode(linkText);
+    }
+</script>
+
+</body>
+</html>
